@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP N°02 POO - Programmation des boucles</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        /* ========================================================================
+           VARIABLES GLOBALES (Thème Google Pixel)
+           Définition de la palette de couleurs, des espacements et des typos.
+        ========================================================================
+        */
+        :root {
+            /* Couleurs Principales */
+            --pixel-blue: #1a73e8;
+            --pixel-cyan: #00bcd4;
+            --pixel-blue-light: #e8f0fe;
+            --pixel-cyan-light: #e0f7fa;
+            
+            /* Couleurs de fond et de surface */
+            --bg-color: #f8f9fa;
+            --surface-color: #ffffff;
+            
+            /* Couleurs de texte */
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --text-tertiary: #80868b;
+            
+            /* Dimensions de la mise en page */
+            --sidebar-width: 300px;
+            --content-padding: 60px;
+            --border-radius-lg: 28px;
+            --border-radius-md: 16px;
+            
+            /* Thème Terminal / Code */
+            --terminal-bg: #202124;
+            --terminal-header: #303134;
+            --terminal-text: #00e676;
+            --terminal-cyan: #26c6da;
+            --terminal-red: #ff5252;
+            --terminal-yellow: #ffd600;
+            --code-bg: #f1f3f4;
+            --code-border: #e8eaed;
+        }
+
+        /* ========================================================================
+           RESET CSS & CONFIGURATION DE BASE
+        ========================================================================
+        */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Google Sans', sans-serif;
+            font-weight: 500;
+        }
+
+        /* ========================================================================
+           BARRE DE NAVIGATION LATÉRALE (SIDEBAR)
+           Style fixe, liens avec effets de survol Material Design.
+        ========================================================================
+        */
+        nav.sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 40px 20px;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+            border-right: 1px solid #dadce0;
+            z-index: 100;
+            scrollbar-width: thin;
+            scrollbar-color: #dadce0 transparent;
+        }
+
+        nav.sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        nav.sidebar::-webkit-scrollbar-thumb {
+            background-color: #dadce0;
+            border-radius: 10px;
+        }
+
+        nav.sidebar h2 {
+            font-size: 1.6rem;
+            color: var(--pixel-blue);
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        nav.sidebar ul {
+            list-style-type: none;
+        }
+
+        nav.sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        nav.sidebar ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 24px;
+            transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        }
+
+        nav.sidebar ul li a:hover {
+            background-color: var(--pixel-blue-light);
+            color: var(--pixel-blue);
+            padding-left: 25px;
+        }
+
+        nav.sidebar ul li ul {
+            margin-top: 5px;
+            margin-left: 20px;
+            border-left: 2px solid #eaebed;
+            padding-left: 10px;
+        }
+
+        nav.sidebar ul li ul li a {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            border-radius: 16px;
+        }
+
+        /* ========================================================================
+           CONTENU PRINCIPAL (MAIN CONTENT)
+        ========================================================================
+        */
+        main.content {
+            margin-left: var(--sidebar-width);
+            padding: var(--content-padding);
+            width: calc(100% - var(--sidebar-width));
+            min-height: calc(100vh - 100px); /* Espace pour le footer */
+            max-width: 1400px;
+        }
+
+        /* Styles des conteneurs de section */
+        section {
+            background: var(--surface-color);
+            border-radius: var(--border-radius-lg);
+            padding: 50px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            border: 1px solid #eaebed;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            box-shadow: 0 6px 32px rgba(0,0,0,0.08);
+        }
+
+        /* ========================================================================
+           PAGE DE GARDE (COVER PAGE)
+        ========================================================================
+        */
+        .cover-page {
+            text-align: center;
+            background: linear-gradient(135deg, var(--pixel-blue-light) 0%, var(--surface-color) 100%);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        /* Décoration d'arrière-plan */
+        .cover-page::before {
+            content: "";
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--pixel-cyan);
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .cover-page::after {
+            content: "";
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: var(--pixel-blue);
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .cover-page > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-page h3.university {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .cover-page h3.faculty {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            font-weight: 400;
+        }
+
+        .cover-page h1.tp-title {
+            font-size: 3.5rem;
+            background: -webkit-linear-gradient(45deg, var(--pixel-blue), var(--pixel-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .cover-page h2.module-name {
+            font-size: 2rem;
+            color: var(--pixel-cyan);
+            margin-bottom: 60px;
+            font-weight: 500;
+        }
+
+        /* Grille des informations de l'étudiant */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px 50px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 900px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        }
+
+        .details-grid p {
+            font-size: 1.15rem;
+            margin: 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .details-grid strong {
+            color: var(--pixel-blue);
+            width: 140px;
+            display: inline-block;
+        }
+
+        .details-grid .highlight-name {
+            color: var(--pixel-blue);
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: var(--pixel-blue-light);
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        /* ========================================================================
+           TYPOGRAPHIE ET ELEMENTS DE TEXTE
+        ========================================================================
+        */
+        h2.section-title {
+            color: var(--pixel-blue);
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #f1f3f4;
+            padding-bottom: 15px;
+        }
+
+        h2.section-title::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 36px;
+            background: var(--pixel-cyan);
+            margin-right: 20px;
+            border-radius: 4px;
+        }
+
+        h3.subsection-title {
+            color: var(--text-primary);
+            font-size: 1.6rem;
+            margin: 40px 0 20px 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        h3.subsection-title::before {
+            content: "►";
+            font-size: 0.8rem;
+            color: var(--pixel-blue);
+            margin-right: 12px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 25px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        ul li, ol li {
+            margin-bottom: 10px;
+        }
+
+        /* Boîtes d'information et d'alerte */
+        .info-box {
+            background-color: var(--pixel-cyan-light);
+            border-left: 6px solid var(--pixel-cyan);
+            padding: 25px;
+            border-radius: 0 16px 16px 0;
+            margin: 30px 0;
+            color: #006064;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .advantage-box {
+            background-color: #e8f5e9;
+            border-left: 6px solid #4caf50;
+            padding: 25px;
+            border-radius: 0 16px 16px 0;
+            margin: 30px 0;
+            color: #1b5e20;
+            font-size: 1.1rem;
+        }
+
+        .analysis-box {
+            background-color: #fff3e0;
+            border-left: 6px solid #ff9800;
+            padding: 25px;
+            border-radius: 0 16px 16px 0;
+            margin: 30px 0;
+            color: #e65100;
+            font-size: 1.1rem;
+        }
+
+        /* ========================================================================
+           STYLES DU CODE SOURCE (Syntax Highlighting)
+        ========================================================================
+        */
+        .code-container {
+            background: var(--code-bg);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            margin: 30px 0;
+            border: 1px solid var(--code-border);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .code-header {
+            background: #e8eaed;
+            padding: 15px 25px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        pre {
+            padding: 25px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #202124;
+            margin: 0;
+        }
+
+        /* Couleurs syntaxiques inspirées de l'IDE moderne */
+        .keyword { color: #d73a49; font-weight: bold; } /* Rouge/Rose pour les mots-clés */
+        .type { color: #005cc5; font-weight: bold; } /* Bleu pour les types de données */
+        .string { color: #032f62; } /* Bleu marine pour les chaînes */
+        .number { color: #005cc5; } /* Bleu pour les nombres */
+        .comment { color: #6a737d; font-style: italic; } /* Gris pour les commentaires */
+        .method { color: #6f42c1; font-weight: bold; } /* Violet pour les méthodes */
+
+        /* ========================================================================
+           STYLES DU TERMINAL INTERACTIF
+        ========================================================================
+        */
+        .terminal-container {
+            background: var(--terminal-bg);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            margin-top: 40px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+            border: 1px solid #444;
+        }
+
+        .terminal-header {
+            background: var(--terminal-header);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #111;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+            margin-right: 20px;
+        }
+
+        .dot { width: 14px; height: 14px; border-radius: 50%; }
+        .dot.red { background: #ff5f56; box-shadow: 0 0 5px #ff5f56; }
+        .dot.yellow { background: #ffbd2e; box-shadow: 0 0 5px #ffbd2e; }
+        .dot.green { background: #27c93f; box-shadow: 0 0 5px #27c93f; }
+
+        .terminal-title {
+            color: #9aa0a6;
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .terminal-body {
+            padding: 25px;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 1rem;
+            color: var(--terminal-text);
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+            line-height: 1.7;
+        }
+
+        .terminal-line { margin-bottom: 10px; }
+        .terminal-prompt { color: var(--terminal-cyan); font-weight: bold; }
+        .terminal-error { color: var(--terminal-red); font-weight: bold; }
+        .terminal-warning { color: var(--terminal-yellow); }
+        .terminal-user-input { color: #ffffff; }
+        
+        .terminal-input-wrapper {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        #prompt-text {
+            color: #ffffff;
+            margin-right: 10px;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 1rem;
+            flex-grow: 1;
+            outline: none;
+            border-bottom: 1px dashed var(--terminal-cyan);
+            padding-bottom: 2px;
+            min-width: 200px;
+        }
+
+        /* Animation du curseur clignotant simulé */
+        .terminal-input:focus {
+            border-bottom: 2px solid var(--terminal-cyan);
+        }
+
+        /* Boutons du Terminal */
+        .btn-run {
+            background: var(--pixel-blue);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            margin-left: 15px;
+            font-family: 'Google Sans', sans-serif;
+            box-shadow: 0 4px 6px rgba(26, 115, 232, 0.3);
+        }
+        .btn-run:hover { background: #1557b0; transform: translateY(-1px); }
+        .btn-run:active { transform: translateY(1px); }
+
+        .btn-clear {
+            background: transparent;
+            border: 1px solid #5f6368;
+            color: #9aa0a6;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s;
+        }
+        .btn-clear:hover { background: #303134; color: #ffffff; border-color: #ffffff; }
+
+        /* ========================================================================
+           PIED DE PAGE (FOOTER)
+        ========================================================================
+        */
+        footer.site-footer {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 30px 40px;
+            background-color: var(--surface-color);
+            border-top: 1px solid #dadce0;
+            text-align: center;
+            font-family: 'Google Sans', sans-serif;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        footer.site-footer .name {
+            color: var(--pixel-blue);
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2>TP N°02 POO</h2>
+        <ul>
+            <li><a href="#cover">Page de Garde</a></li>
+            <li><a href="#objectifs">1. Objectifs du TP</a></li>
+            <li><a href="#rappels">2. Théorie des Boucles</a>
+                <ul>
+                    <li><a href="#boucle-for">La boucle for</a></li>
+                    <li><a href="#boucle-while">La boucle while</a></li>
+                    <li><a href="#boucle-dowhile">La boucle do...while</a></li>
+                </ul>
+            </li>
+            <li><a href="#travail">3. Travail Demandé</a>
+                <ul>
+                    <li><a href="#analyse">Analyse & Stratégie</a></li>
+                    <li><a href="#code">Implémentation Java</a></li>
+                    <li><a href="#explications">Analyse du Code</a></li>
+                    <li><a href="#terminal">Terminal Interactif</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="content">
+
+        <section id="cover" class="cover-page">
+            <h3 class="university">Université des Sciences et de la Technologie HOUARI BOUMEDIENE - USTHB -</h3>
+            <h3 class="faculty">Faculté de Génie Electrique FGE — Département d'Automatique</h3>
+            
+            <h1 class="tp-title">Programmation des boucles en POO</h1>
+            <h2 class="module-name">Module: TP POO — TP N° 02</h2>
+            
+            <div class="details-grid">
+                <p><strong>Spécialité :</strong> Automatique</p>
+                <p><strong>Niveau :</strong> M1 AII</p>
+                <p><strong>Enseignant :</strong> MENANI</p>
+                <p><strong>Année Univ. :</strong> 2025 / 2026</p>
+                <p><strong>Réalisé par :</strong> <span class="highlight-name">DAHANE AHMED LAMINE</span></p>
+                <p><strong>Binôme / Collège :</strong> <span class="highlight-name">TABBI MERIEM</span></p>
+            </div>
+        </section>
+
+        <section id="objectifs">
+            <h2 class="section-title">1. Objectif du TP</h2>
+            <p>Le but principal de ce deuxième travail pratique est d'apprendre et de maîtriser la programmation des structures itératives (boucles) par l'utilisation du langage Java.</p>
+            <p>En Programmation Orientée Objet (POO), les boucles sont essentielles. Elles permettent d'exécuter un bloc d'instructions de manière répétée selon une condition donnée. Cela évite la redondance du code, optimise l'utilisation de la mémoire, et permet de traiter des flux de données (comme la lecture de capteurs en Automatique) ou de gérer des interactions utilisateur continues (comme un système d'authentification).</p>
+        </section>
+
+        <section id="rappels">
+            <h2 class="section-title">2. Programmation des boucles en Java</h2>
+            <p>L'énoncé du TP souligne qu'il existe trois types principaux de boucles en Java : <code>while</code>, <code>do... while</code>, et <code>for</code>. Le choix de la boucle adéquate dépend fortement de la logique de l'algorithme à implémenter.</p>
+
+            <h3 id="boucle-for" class="subsection-title">2.1 La boucle <code>for</code> en Java</h3>
+            <p>La structure générale de la boucle <code>for</code> est définie comme suit :</p>
+            <pre><code><span class="keyword">for</span> (&lt;initialisation&gt;; &lt;condition&gt;; &lt;pas&gt;) {
+    &lt;instructions&gt;
+}</code></pre>
+            
+            <div class="info-box">
+                <strong>💡 Comment fonctionne-t-elle et quels sont ses avantages ?</strong>
+                <ul>
+                    <li>La gestion du compteur est <strong>automatique</strong> et centralisée sur une seule ligne (initialisation, test de la condition, et incrémentation).</li>
+                    <li><strong>Avantage majeur :</strong> Il faut utiliser cette boucle lorsqu'on connaît à l'avance le nombre exact d'itérations à effectuer (par exemple, parcourir un tableau de taille fixe).</li>
+                </ul>
+            </div>
+            <p><strong>Exemple de l'énoncé :</strong></p>
+            <pre><code><span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) {
+        System.out.print(i + <span class="string">" "</span>);
+    }
+    System.out.println();
+}</code></pre>
+
+            <h3 id="boucle-while" class="subsection-title">2.2 La boucle <code>while</code> (Tant Que)</h3>
+            <p>La structure générale de cette boucle est très simple :</p>
+            <pre><code><span class="keyword">while</span> (&lt;condition&gt;) {
+    &lt;instructions&gt;
+}</code></pre>
+            
+            <div class="analysis-box">
+                <strong>⚠️ Règles critiques de la boucle <code>while</code> :</strong><br>
+                Contrairement à la boucle <code>for</code>, la boucle <code>while</code> ne gère pas son propre compteur. Il faut donc impérativement respecter ces étapes :
+                <ol>
+                    <li><strong>Initialiser</strong> le compteur avant d'entrer dans la boucle.</li>
+                    <li><strong>Contrôler</strong> la valeur du compteur dans la condition de boucle.</li>
+                    <li><strong>Incrémenter</strong> (ou modifier) le compteur à la fin du corps de la boucle, sinon le programme entrera dans une boucle infinie.</li>
+                </ol>
+                Notez bien qu'il n'y a pas de point-virgule après l'instruction <code>while</code>.
+            </div>
+
+            <h3 id="boucle-dowhile" class="subsection-title">2.3 La boucle <code>do...while</code> (Répéter... Jusqu'à)</h3>
+            <p>La structure de la boucle <code>do...while</code> (répéter) est :</p>
+            <pre><code><span class="keyword">do</span> {
+    &lt;instructions&gt;
+} <span class="keyword">while</span> (&lt;condition&gt;);</code></pre>
+            
+            <div class="advantage-box">
+                <strong>✅ L'avantage unique du <code>do...while</code> :</strong><br>
+                La condition est évaluée <strong>après</strong> chaque passage dans la boucle. On exécute le corps de la boucle tant que la condition est vérifiée. L'énorme différence avec le <code>while</code> normal est que <strong>l'on passe toujours au moins une fois</strong> dans une boucle <code>do...while</code>, peu importe si la condition est vraie ou fausse à l'origine. C'est idéal pour demander une saisie à un utilisateur (menus interactifs, demande de mot de passe).
+            </div>
+        </section>
+
+        <section id="travail">
+            <h2 class="section-title">3. Travail Demandé : Système d'Authentification Sécurisé</h2>
+            
+            <p><strong>Énoncé de l'exercice :</strong> Écrire un programme en JAVA qui permet de vérifier le mot de passe saisi au clavier. L'utilisateur a droit à 3 chances pour que la machine lui affiche le succès de l'authentification sinon un message de compte bloqué sera affiché. Dans le cas où il veut encore retenter l'accès au compte une nouvelle chance lui est proposée sous forme de question secrète à laquelle il devra répondre. Si la réponse est incorrecte l'accès lui est définitivement refusé pour l'exécution en cours.</p>
+            <p><em>Rappel des consignes :</em> le mot de passe correct est <strong>'AIIMI'</strong> et la réponse correcte à la question secrète est <strong>'Auto'</strong>.</p>
+
+            <h3 id="analyse" class="subsection-title">3.1 Analyse Algorithmique et Stratégie (Comment concevoir la solution ?)</h3>
+            <p>Pour résoudre ce problème de manière professionnelle en POO, nous devons décomposer la logique (Machine à états) :</p>
+            <ul>
+                <li><strong>État initial :</strong> L'utilisateur n'est pas connecté. Il a 0 tentative à son actif.</li>
+                <li><strong>Le choix de la boucle :</strong> L'utilisateur doit saisir un mot de passe et on doit vérifier s'il a bon. S'il a faux, il recommence, jusqu'à un maximum de 3 fois. 
+                    Nous allons utiliser une boucle <code>while</code> avec une <strong>condition complexe (composée)</strong> : on continue la boucle <em>TANT QUE</em> le nombre de tentatives est inférieur à 3 <em>ET</em> que l'utilisateur n'est pas authentifié.
+                </li>
+                <li><strong>Le Mécanisme de blocage :</strong> À la sortie de la boucle, il y a deux possibilités. 
+                    <br>1) La boucle s'est arrêtée car le mot de passe est bon (Succès).
+                    <br>2) La boucle s'est arrêtée car le compteur a atteint 3 (Échec).
+                </li>
+                <li><strong>Le Mécanisme de secours (Question secrète) :</strong> Si on est dans le cas de l'échec (2), on affiche le blocage, puis on utilise un simple <code>if/else</code> pour proposer la question secrète. Si la réponse est "Auto", on valide.</li>
+            </ul>
+
+            <h3 id="code" class="subsection-title">3.2 Implémentation du Code Source Java</h3>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Authentification.java</span>
+                    <span>Java</span>
+                </div>
+<pre>
+<span class="keyword">import</span> java.util.Scanner; <span class="comment">// Importation pour lire les entrées clavier</span>
+
+<span class="keyword">public class</span> <span class="type">Authentification</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="type">Scanner</span> lecteur = <span class="keyword">new</span> <span class="type">Scanner</span>(System.in);
+        
+        <span class="comment">// 1. Déclaration des variables et constantes (définies dans l'énoncé)</span>
+        <span class="type">String</span> mdpCorrect = <span class="string">"AIIMI"</span>;
+        <span class="type">String</span> reponseSecreteCorrecte = <span class="string">"Auto"</span>;
+        
+        <span class="type">int</span> nombreTentatives = <span class="number">0</span>;
+        <span class="type">boolean</span> estAuthentifie = <span class="keyword">false</span>;
+        <span class="type">String</span> saisieUtilisateur = <span class="string">""</span>;
+        
+        <span class="comment">// 2. Boucle de vérification principale (Max 3 chances)</span>
+        <span class="comment">// La boucle tourne tant qu'on a moins de 3 tentatives ET qu'on n'est pas authentifié</span>
+        <span class="keyword">while</span> (nombreTentatives &lt; <span class="number">3</span> && !estAuthentifie) {
+            System.out.print(<span class="string">"Veuillez saisir le mot de passe : "</span>);
+            saisieUtilisateur = lecteur.nextLine();
+            
+            <span class="comment">// Utilisation de la méthode equals() pour comparer le contenu des String</span>
+            <span class="keyword">if</span> (saisieUtilisateur.equals(mdpCorrect)) {
+                estAuthentifie = <span class="keyword">true</span>; <span class="comment">// Le booléen passe à true, ce qui va stopper la boucle</span>
+            } <span class="keyword">else</span> {
+                nombreTentatives++; <span class="comment">// Incrémentation du compteur d'échec</span>
+                
+                <span class="comment">// Affichage du nombre de chances restantes si ce n'est pas le dernier essai</span>
+                <span class="keyword">if</span> (nombreTentatives &lt; <span class="number">3</span>) {
+                    System.out.println(<span class="string">"Erreur. Il vous reste "</span> + (<span class="number">3</span> - nombreTentatives) + <span class="string">" tentative(s)."</span>);
+                }
+            }
+        }
+        
+        <span class="comment">// 3. Traitement POST-BOUCLE : Vérification de l'état final</span>
+        <span class="keyword">if</span> (estAuthentifie) {
+            <span class="comment">// Cas 1 : L'utilisateur a trouvé le mot de passe dans les 3 essais</span>
+            System.out.println(<span class="string">"&gt;&gt; Succès de l'authentification. Bienvenue dans le système !"</span>);
+        } <span class="keyword">else</span> {
+            <span class="comment">// Cas 2 : L'utilisateur a épuisé ses 3 chances (nombreTentatives == 3)</span>
+            System.out.println(<span class="string">"&gt;&gt; COMPTE BLOQUÉ. Nombre de tentatives maximum atteint."</span>);
+            
+            <span class="comment">// Mise en place de l'alternative de secours</span>
+            System.out.print(<span class="string">"Voulez-vous répondre à la question secrète pour débloquer ? (O/N) : "</span>);
+            <span class="type">String</span> choix = lecteur.nextLine();
+            
+            <span class="comment">// equalsIgnoreCase() permet d'accepter 'o' minuscule ou 'O' majuscule</span>
+            <span class="keyword">if</span> (choix.equalsIgnoreCase(<span class="string">"O"</span>)) {
+                System.out.print(<span class="string">"Question Secrète : Quelle est la spécialité étudiée ? "</span>);
+                <span class="type">String</span> repSecrete = lecteur.nextLine();
+                
+                <span class="keyword">if</span> (repSecrete.equals(reponseSecreteCorrecte)) {
+                    System.out.println(<span class="string">"&gt;&gt; Succès ! Compte débloqué via la question secrète."</span>);
+                } <span class="keyword">else</span> {
+                    System.out.println(<span class="string">"&gt;&gt; Réponse incorrecte. Accès définitivement refusé."</span>);
+                }
+            } <span class="keyword">else</span> {
+                System.out.println(<span class="string">"&gt;&gt; Procédure annulée. Accès définitivement refusé."</span>);
+            }
+        }
+        
+        <span class="comment">// Libération de la mémoire du Scanner</span>
+        lecteur.close();
+    }
+}
+</pre>
+            </div>
+
+            <h3 id="explications" class="subsection-title">3.3 Explications détaillées (Les touches techniques du programme)</h3>
+            
+            <div class="info-box">
+                <strong>Pourquoi utiliser <code>equals()</code> et non pas <code>==</code> pour les chaînes de caractères ?</strong><br>
+                C'est une spécificité cruciale en Java. Une variable de type <code>String</code> est un Objet. Si on utilise l'opérateur <code>==</code>, Java va comparer les <em>adresses mémoire</em> des deux objets, et non pas le texte qu'ils contiennent. Pour vérifier si le texte tapé correspond à "AIIMI", nous appelons la méthode <code>.equals()</code> de la classe String qui compare le contenu lettre par lettre.
+            </div>
+
+            <p><strong>L'avantage de la condition composée dans le while :</strong></p>
+            <p>La ligne <code>while (nombreTentatives &lt; 3 && !estAuthentifie)</code> est le cœur de notre logique d'optimisation. </p>
+            <ul>
+                <li>L'opérateur logique <code>&&</code> (ET) exige que les deux conditions soient vraies pour que la boucle continue.</li>
+                <li>Si l'utilisateur tape le bon mot de passe au premier essai, <code>estAuthentifie</code> devient <code>true</code>. Le test <code>!estAuthentifie</code> (NON authentifié) devient <code>false</code>. La boucle s'arrête immédiatement. L'algorithme est performant car il ne pose pas la question inutilement 3 fois.</li>
+            </ul>
+
+            <p><strong>L'utilisation de <code>equalsIgnoreCase()</code> :</strong></p>
+            <p>Lors de la demande <em>(O/N)</em>, l'utilisateur pourrait taper un 'o' minuscule ou un 'O' majuscule. Au lieu de faire un test complexe <code>if (choix.equals("O") || choix.equals("o"))</code>, l'API Java fournit la méthode <code>equalsIgnoreCase()</code> qui gère cette robustesse automatiquement. C'est un grand avantage en termes de lisibilité du code.</p>
+
+            <h3 id="terminal" class="subsection-title">3.4 Simulation d'Exécution (Terminal Interactif)</h3>
+            <p>Vous pouvez tester la logique algorithmique étudiée ci-dessus directement dans cette console virtuelle. Rappel : le mot de passe attendu est <strong>AIIMI</strong> et la réponse à la question secrète est <strong>Auto</strong>.</p>
+            
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <div class="terminal-title">Application Console — Authentification.class</div>
+                    <button class="btn-clear" onclick="rebootTerminal()">Redémarrer le script</button>
+                </div>
+                
+                <div class="terminal-body" id="term-body">
+                    <div class="terminal-line"><span class="terminal-prompt">USTHB_SYS></span> Démarrage du module de sécurité POO... OK.</div>
+                    
+                    <div id="input-container" class="terminal-input-wrapper">
+                        <span id="prompt-text">Veuillez saisir le mot de passe :</span>
+                        <input type="text" id="term-in" class="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+                        <button class="btn-run" onclick="handleInput()">Valider</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        &copy; Created by <span class="name">DAHANE AHMED LAMINE</span>
+    </footer>
+
+    <script>
+        /**
+         * Machine à états (State Machine) pour gérer le comportement interactif 
+         * du faux terminal en reproduisant exactement la logique Java écrite plus haut.
+         */
+        let terminalState = {
+            currentPhase: 'PASSWORD_INPUT', // Phases possibles: PASSWORD_INPUT, SECRET_CHOICE, SECRET_ANSWER, END
+            failedAttempts: 0,
+            maxAttempts: 3,
+            targetPassword: 'AIIMI',
+            targetSecretAnswer: 'Auto'
+        };
+
+        // Références DOM
+        const displayBody = document.getElementById('term-body');
+        const activeInputArea = document.getElementById('input-container');
+        const commandInput = document.getElementById('term-in');
+        const commandPrompt = document.getElementById('prompt-text');
+
+        /**
+         * Fonction utilitaire pour écrire une ligne dans le terminal
+         */
+        function writeToConsole(message, cssClass = '') {
+            const newLineElement = document.createElement('div');
+            newLineElement.className = 'terminal-line ' + cssClass;
+            newLineElement.innerHTML = message;
+            
+            // Insérer juste avant la zone de saisie actuelle
+            displayBody.insertBefore(newLineElement, activeInputArea);
+            
+            // Auto-scroll vers le bas
+            displayBody.scrollTop = displayBody.scrollHeight;
+        }
+
+        /**
+         * Réinitialise complètement le terminal et la machine à états
+         */
+        function rebootTerminal() {
+            terminalState.currentPhase = 'PASSWORD_INPUT';
+            terminalState.failedAttempts = 0;
+            
+            // Nettoyage de l'écran (on garde juste une ligne de démarrage)
+            displayBody.innerHTML = `<div class="terminal-line"><span class="terminal-prompt">USTHB_SYS></span> Redémarrage du système... Nouveau cycle initié.</div>`;
+            displayBody.appendChild(activeInputArea);
+            
+            // Réinitialisation de l'UI de saisie
+            commandPrompt.innerText = "Veuillez saisir le mot de passe :";
+            commandInput.value = '';
+            activeInputArea.style.display = 'flex';
+            commandInput.focus();
+        }
+
+        /**
+         * Traite l'entrée de l'utilisateur selon l'état actuel (switch case)
+         */
+        function handleInput() {
+            const userText = commandInput.value.trim();
+            
+            // Si le programme est terminé, on ignore
+            if(terminalState.currentPhase === 'END') return;
+
+            // Écho de la commande tapée par l'utilisateur
+            writeToConsole(`<span class="terminal-user-input">> ${userText}</span>`);
+            commandInput.value = ''; // Vider le champ texte
+
+            // Logique de l'application selon la phase
+            switch(terminalState.currentPhase) {
+                
+                // --- PHASE 1 : Saisie du mot de passe ---
+                case 'PASSWORD_INPUT':
+                    if (userText === terminalState.targetPassword) {
+                        writeToConsole("✅ Succès de l'authentification. Bienvenue dans le système !", "terminal-text");
+                        terminateProgram();
+                    } else {
+                        terminalState.failedAttempts++;
+                        
+                        if (terminalState.failedAttempts < terminalState.maxAttempts) {
+                            // Erreur mais il reste des chances
+                            let chancesLeft = terminalState.maxAttempts - terminalState.failedAttempts;
+                            writeToConsole(`Erreur. Il vous reste ${chancesLeft} tentative(s).`, "terminal-warning");
+                        } else {
+                            // Plus de chances (3 erreurs)
+                            writeToConsole("❌ COMPTE BLOQUÉ. Nombre de tentatives maximum atteint.", "terminal-error");
+                            writeToConsole("Voulez-vous répondre à la question secrète pour débloquer ? (O/N) :");
+                            commandPrompt.innerText = "(O/N) :";
+                            terminalState.currentPhase = 'SECRET_CHOICE';
+                        }
+                    }
+                    break;
+
+                // --- PHASE 2 : Choix d'utiliser la question secrète ---
+                case 'SECRET_CHOICE':
+                    if (userText.toUpperCase() === 'O') {
+                        // L'utilisateur accepte
+                        commandPrompt.innerText = "Question Secrète : Quelle est la spécialité étudiée ? ";
+                        terminalState.currentPhase = 'SECRET_ANSWER';
+                    } else {
+                        // L'utilisateur refuse ou tape autre chose
+                        writeToConsole("🚫 Procédure annulée. Accès définitivement refusé.", "terminal-error");
+                        terminateProgram();
+                    }
+                    break;
+
+                // --- PHASE 3 : Vérification de la réponse secrète ---
+                case 'SECRET_ANSWER':
+                    if (userText === terminalState.targetSecretAnswer) {
+                        writeToConsole("✅ Succès ! Compte débloqué via la question secrète.", "terminal-text");
+                    } else {
+                        writeToConsole("🚫 Réponse incorrecte. Accès définitivement refusé.", "terminal-error");
+                    }
+                    terminateProgram();
+                    break;
+            }
+            
+            // Garder le focus sur l'input si le programme continue
+            if(terminalState.currentPhase !== 'END') {
+                commandInput.focus();
+            }
+        }
+
+        /**
+         * Clôture le programme et masque la zone de saisie
+         */
+        function terminateProgram() {
+            terminalState.currentPhase = 'END';
+            activeInputArea.style.display = 'none';
+            writeToConsole("<br><span class='comment'>-- Fin du programme. Cliquez sur 'Redémarrer le script' en haut pour réessayer. --</span>");
+        }
+
+        // Ajout d'un écouteur d'événement sur la touche 'Entrée' (Enter)
+        commandInput.addEventListener('keypress', function(e) { 
+            if(e.key === 'Enter') {
+                handleInput(); 
+            }
+        });
+    </script>
+</body>
+</html>
