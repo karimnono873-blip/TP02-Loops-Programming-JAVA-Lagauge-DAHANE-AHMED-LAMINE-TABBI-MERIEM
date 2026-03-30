@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rapport de TP N°02 POO - Programmation des boucles en Java. Réalisé par DAHANE AHMED LAMINE et TABBI MERIEM.">
+    <title>TP N°02 POO - Programmation des boucles (Rapport Avancé)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES GLOBALES --- */
+        :root {
+            /* Palette Google Pixel Principale */
+            --pixel-blue: #1a73e8;
+            --pixel-blue-dark: #1557b0;
+            --pixel-blue-light: #e8f0fe;
+            --pixel-cyan: #00bcd4;
+            --pixel-cyan-dark: #0097a7;
+            --pixel-cyan-light: #e0f7fa;
+            
+            /* Couleurs de fond et de surface */
+            --bg-color: #f8f9fa;
+            --surface-color: #ffffff;
+            --border-color: #dadce0;
+            
+            /* Couleurs Typographiques */
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --text-tertiary: #80868b;
+            --text-code: #3c4043;
+            
+            /* Thème Terminal / IDE */
+            --terminal-bg: #202124;
+            --terminal-header: #303134;
+            --terminal-text: #00e676;
+            --terminal-cyan: #26c6da;
+            --terminal-red: #ff5252;
+            --terminal-yellow: #ffd600;
+            --code-bg: #f1f3f4;
+            --code-border: #e8eaed;
+
+            /* Dimensions et Espacements */
+            --sidebar-width: 320px;
+            --content-padding: 60px;
+            --border-radius-xl: 32px;
+            --border-radius-lg: 24px;
+            --border-radius-md: 16px;
+            --border-radius-sm: 8px;
+            
+            /* Ombres (Shadows) */
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 16px 40px rgba(0,0,0,0.12);
+        }
+
+        /* --- RESET CSS --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Google Sans', sans-serif;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        /* --- NAVIGATION LATERALE (SIDEBAR) --- */
+        nav.sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--surface-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 40px 25px;
+            box-shadow: var(--shadow-sm);
+            border-right: 1px solid var(--border-color);
+            z-index: 1000;
+            /* Stylisation de la barre de défilement */
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+
+        nav.sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        nav.sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 10px;
+        }
+
+        nav.sidebar h2 {
+            font-size: 1.7rem;
+            color: var(--pixel-blue);
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        nav.sidebar ul {
+            list-style-type: none;
+        }
+
+        nav.sidebar ul li {
+            margin-bottom: 12px;
+        }
+
+        nav.sidebar ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            display: block;
+            padding: 14px 22px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        nav.sidebar ul li a:hover {
+            background-color: var(--pixel-blue-light);
+            color: var(--pixel-blue);
+            padding-left: 28px;
+            box-shadow: inset 2px 0 0 var(--pixel-blue);
+        }
+
+        nav.sidebar ul li ul {
+            margin-top: 8px;
+            margin-left: 25px;
+            border-left: 2px solid var(--border-color);
+            padding-left: 12px;
+        }
+
+        nav.sidebar ul li ul li a {
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 400;
+            border-radius: 20px;
+        }
+
+        /* --- CONTENU PRINCIPAL --- */
+        main.content {
+            margin-left: var(--sidebar-width);
+            padding: var(--content-padding);
+            width: calc(100% - var(--sidebar-width));
+            min-height: calc(100vh - 100px);
+            max-width: 1500px;
+            margin-right: auto;
+        }
+
+        section {
+            background: var(--surface-color);
+            border-radius: var(--border-radius-xl);
+            padding: 60px;
+            margin-bottom: 60px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        section:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* --- PAGE DE GARDE --- */
+        .cover-page {
+            text-align: center;
+            background: linear-gradient(145deg, var(--pixel-blue-light) 0%, var(--surface-color) 100%);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 85vh;
+        }
+
+        /* Animations et décorations d'arrière-plan */
+        .cover-page::before, .cover-page::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+            animation: pulse 10s infinite alternate ease-in-out;
+        }
+
+        .cover-page::before {
+            top: -150px;
+            right: -150px;
+            width: 400px;
+            height: 400px;
+            background: var(--pixel-cyan);
+            opacity: 0.04;
+        }
+
+        .cover-page::after {
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--pixel-blue);
+            opacity: 0.04;
+            animation-delay: -5s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .cover-page h3.university {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .cover-page h3.faculty {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 60px;
+            font-weight: 400;
+        }
+
+        .cover-page h1.tp-title {
+            font-size: 3.8rem;
+            background: -webkit-linear-gradient(45deg, var(--pixel-blue), var(--pixel-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .cover-page h2.module-name {
+            font-size: 2.2rem;
+            color: var(--pixel-cyan-dark);
+            margin-bottom: 70px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        
+        /* Tableau des détails de l'étudiant */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px 60px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 50px;
+            border-radius: var(--border-radius-lg);
+            width: 100%;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }
+
+        .details-grid p {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .details-grid strong {
+            color: var(--pixel-blue);
+            width: 160px;
+            display: inline-block;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .details-grid .highlight-name {
+            color: var(--pixel-blue-dark);
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: var(--pixel-blue-light);
+            padding: 6px 16px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid rgba(26, 115, 232, 0.1);
+        }
+
+        /* --- TYPOGRAPHIE & TEXTE --- */
+        h2.section-title {
+            color: var(--pixel-blue);
+            font-size: 2.4rem;
+            margin-bottom: 45px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--code-border);
+            padding-bottom: 20px;
+            font-weight: 700;
+        }
+
+        h2.section-title::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--pixel-blue), var(--pixel-cyan));
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        h3.subsection-title {
+            color: var(--text-primary);
+            font-size: 1.7rem;
+            margin: 50px 0 25px 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        h3.subsection-title::before {
+            content: "►";
+            font-size: 1rem;
+            color: var(--pixel-blue);
+            margin-right: 15px;
+            transform: translateY(2px);
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+
+        ul li, ol li {
+            margin-bottom: 12px;
+            padding-left: 5px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--code-bg);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--pixel-blue-dark);
+            font-size: 0.95em;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Boîtes d'alerte et d'information */
+        .info-box, .warning-box, .success-box, .explanation-box {
+            padding: 30px;
+            border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+            margin: 40px 0;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-box {
+            background-color: var(--pixel-cyan-light);
+            border-left: 8px solid var(--pixel-cyan);
+            color: #006064;
+        }
+
+        .warning-box {
+            background-color: #fff8e1;
+            border-left: 8px solid #ffc107;
+            color: #ff8f00;
+        }
+
+        .success-box {
+            background-color: #e8f5e9;
+            border-left: 8px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        /* Explications post-exécution */
+        .explanation-box {
+            background-color: var(--pixel-blue-light);
+            border-left: 8px solid var(--pixel-blue);
+            color: #0d47a1;
+            margin-top: 30px; /* Force l'espacement après le terminal */
+        }
+
+        .explanation-box h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--pixel-blue-dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .explanation-box h4::before {
+            content: "💡";
+            margin-right: 10px;
+        }
+
+        .explanation-box p {
+            color: inherit;
+        }
+
+        /* --- STYLES DU CODE SOURCE (IDE THEME) --- */
+        .code-container {
+            background: var(--surface-color);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            margin: 40px 0;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-header {
+            background: #f8f9fa;
+            padding: 16px 30px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        pre {
+            padding: 30px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-code);
+            margin: 0;
+            background-color: #fafbfc;
+        }
+
+        /* Syntax Highlighting */
+        .keyword { color: #d73a49; font-weight: bold; }
+        .type { color: #005cc5; font-weight: bold; }
+        .string { color: #032f62; }
+        .number { color: #005cc5; }
+        .comment { color: #6a737d; font-style: italic; }
+        .method { color: #6f42c1; font-weight: bold; }
+        .operator { color: #d73a49; }
+
+        /* --- STYLES DES TERMINAUX INTERACTIFS --- */
+        .terminal-container {
+            background: var(--terminal-bg);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            margin: 40px 0 20px 0; /* Marge inférieure réduite car suivie par l'explication */
+            box-shadow: var(--shadow-lg);
+            border: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-header {
+            background: var(--terminal-header);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #111;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 10px;
+            margin-right: 25px;
+        }
+
+        .dot { 
+            width: 16px; 
+            height: 16px; 
+            border-radius: 50%; 
+            transition: opacity 0.2s;
+        }
+        .dot:hover { opacity: 0.8; }
+        .dot.red { background: #ff5f56; box-shadow: 0 0 8px rgba(255,95,86,0.5); }
+        .dot.yellow { background: #ffbd2e; box-shadow: 0 0 8px rgba(255,189,46,0.5); }
+        .dot.green { background: #27c93f; box-shadow: 0 0 8px rgba(39,201,63,0.5); }
+
+        .terminal-title {
+            color: #9aa0a6;
+            font-size: 0.95rem;
+            font-family: 'JetBrains Mono', monospace;
+            flex-grow: 1;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        .terminal-body {
+            padding: 30px;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 1.05rem;
+            color: var(--terminal-text);
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+            line-height: 1.8;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 100% 2em;
+        }
+
+        .terminal-line { margin-bottom: 12px; }
+        .terminal-prompt { color: var(--terminal-cyan); font-weight: bold; }
+        .terminal-error { color: var(--terminal-red); font-weight: bold; }
+        .terminal-warning { color: var(--terminal-yellow); font-weight: bold; }
+        .terminal-system { color: #ffffff; opacity: 0.8; }
+        .terminal-user-input { color: #ffffff; font-weight: bold; }
+        
+        /* Boutons d'interaction Terminal */
+        .terminal-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-run {
+            background: linear-gradient(135deg, var(--pixel-blue) 0%, var(--pixel-blue-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Google Sans', sans-serif;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-run:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.6);
+        }
+        .btn-run:active {
+            transform: translateY(1px);
+        }
+
+        .btn-clear {
+            background: transparent;
+            border: 2px solid #5f6368;
+            color: #9aa0a6;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .btn-clear:hover {
+            background: #444;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        /* Ligne de saisie interactive (Exo 4) */
+        .terminal-input-wrapper {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        #prompt-text {
+            color: #ffffff;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--terminal-yellow);
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 1.1rem;
+            flex-grow: 1;
+            outline: none;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 2px;
+            min-width: 250px;
+            transition: border-color 0.3s;
+        }
+
+        .terminal-input:focus {
+            border-bottom: 2px solid var(--terminal-cyan);
+            animation: blink-border 1s infinite;
+        }
+
+        @keyframes blink-border {
+            50% { border-color: transparent; }
+        }
+
+        /* --- FOOTER (SIGNATURE) --- */
+        footer.site-footer {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 40px 60px;
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-family: 'Google Sans', sans-serif;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.02);
+            position: relative;
+            z-index: 10;
+        }
+
+        footer.site-footer .name {
+            color: var(--pixel-blue);
+            font-weight: 700;
+            font-size: 1.4rem;
+            display: inline-block;
+            margin-left: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 1200px) {
+            .details-grid { grid-template-columns: 1fr; gap: 20px; }
+            .cover-page h1.tp-title { font-size: 3rem; }
+        }
+
+        @media (max-width: 900px) {
+            :root { --sidebar-width: 0px; --content-padding: 30px; }
+            nav.sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            main.content, footer.site-footer { margin-left: 0; width: 100%; }
+            .terminal-controls { flex-direction: column; width: 100%; }
+            .btn-run, .btn-clear { width: 100%; margin-left: 0; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2>Sommaire TP 02</h2>
+        <ul>
+            <li><a href="#cover">Page de Garde</a></li>
+            <li><a href="#objectifs">1. Objectifs du TP</a></li>
+            <li><a href="#theorie">2. Théorie des Boucles</a>
+                <ul>
+                    <li><a href="#for">2.1 La boucle FOR</a></li>
+                    <li><a href="#while">2.2 La boucle WHILE</a></li>
+                    <li><a href="#dowhile">2.3 La boucle DO...WHILE</a></li>
+                </ul>
+            </li>
+            <li><a href="#exo">3. Exercice d'Application</a>
+                <ul>
+                    <li><a href="#exo-enonce">Énoncé</a></li>
+                    <li><a href="#exo-code">Code Source Java</a></li>
+                    <li><a href="#exo-terminal">Exécution Interactive</a></li>
+                    <li><a href="#exo-explication">Explication Détaillée</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="content">
+
+        <section id="cover" class="cover-page">
+            <div class="cover-content">
+                <h3 class="university">Université des Sciences et de la Technologie HOUARI BOUMEDIENE - USTHB -</h3>
+                <h3 class="faculty">Faculté de Génie Electrique FGE — Département d'Automatique</h3>
+                
+                <h1 class="tp-title">Programmation des boucles en POO</h1>
+                <h2 class="module-name">Module: TP POO — TP N° 02</h2>
+                
+                <div class="details-grid">
+                    <p><strong>Spécialité :</strong> Automatique</p>
+                    <p><strong>Niveau :</strong> M1 AII</p>
+                    <p><strong>Enseignant :</strong> MENANI</p>
+                    <p><strong>Année Univ. :</strong> 2025 / 2026</p>
+                    <p><strong>Réalisé par :</strong> <span class="highlight-name">DAHANE AHMED LAMINE</span></p>
+                    <p><strong>Binôme :</strong> <span class="highlight-name">TABBI MERIEM</span></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="objectifs">
+            <h2 class="section-title">1. Objectif du TP</h2>
+            <p>Le but fondamental de ce deuxième travail pratique est d'apprendre, de comprendre et de maîtriser la programmation des structures itératives (communément appelées "boucles") par l'utilisation du langage Java.</p>
+            <p>Dans la Programmation Orientée Objet (POO) et dans le développement logiciel en général, les boucles sont des outils indispensables. Elles permettent d'exécuter un bloc d'instructions de manière répétée et contrôlée selon une ou plusieurs conditions définies par le programmeur. L'utilisation correcte des boucles permet de :</p>
+            <ul>
+                <li><strong>Éviter la redondance :</strong> Ne pas écrire 100 fois la même ligne de code.</li>
+                <li><strong>Automatiser des tâches :</strong> Traiter de grandes quantités de données (comme des tableaux ou des listes).</li>
+                <li><strong>Créer des interactions continues :</strong> Maintenir un programme ouvert en attendant l'action d'un utilisateur, ce qui est particulièrement utile dans les systèmes embarqués ou les interfaces graphiques en Automatique.</li>
+            </ul>
+        </section>
+
+        <section id="for">
+            <h2 class="section-title">2.1 La boucle <code>for</code> en Java</h2>
+            <p>La boucle <code>for</code> est sans doute la boucle la plus utilisée lorsqu'il s'agit de parcourir des éléments dont le nombre est connu à l'avance. Sa syntaxe compacte regroupe toute la logique de comptage sur une seule ligne.</p>
+            
+            <p>La structure générale de la boucle <code>for</code> est :</p>
+            <code>for (&lt;initialisation&gt;; &lt;condition&gt;; &lt;pas&gt;) { &lt;instructions&gt; }</code>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Exemple_Boucle_For.java</span>
+                    <span>Java</span>
+                </div>
+<pre>
+<span class="keyword">public class</span> <span class="type">ExempleFor</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="comment">// i commence à 1 ; la boucle tourne tant que i <= 5 ; i augmente de +1 à chaque tour</span>
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) {
+            System.out.print(i + <span class="string">" "</span>);
+        }
+        <span class="comment">// Retour à la ligne après l'exécution de la boucle</span>
+        System.out.println();
+    }
+}
+</pre>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="terminal-title">Fenêtre d'exécution : Boucle FOR</div>
+                    <div class="terminal-controls">
+                        <button class="btn-run" onclick="runStatic('out-for', '1 2 3 4 5 ')">Exécuter la boucle</button>
+                        <button class="btn-clear" onclick="clearStatic('out-for')">Effacer</button>
+                    </div>
+                </div>
+                <div class="terminal-body" id="out-for">
+                    <div class="terminal-line"><span class="terminal-prompt">Compilateur></span> Prêt pour l'exécution. En attente de l'ordre...</div>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Explication détaillée de l'exécution :</h4>
+                <p><strong>Mécanisme interne : pourquoi affiche-t-il exactement "1 2 3 4 5 " ?</strong></p>
+                <ol>
+                    <li><strong>Initialisation :</strong> La machine lit <code>int i = 1</code> une seule fois au tout début. La mémoire alloue un espace pour la variable <code>i</code> et lui donne la valeur 1.</li>
+                    <li><strong>Évaluation :</strong> Elle vérifie la condition <code>i &lt;= 5</code>. Puisque 1 est inférieur ou égal à 5, la condition est vraie (<em>true</em>).</li>
+                    <li><strong>Exécution :</strong> Elle exécute le corps de la boucle, imprimant "1 ".</li>
+                    <li><strong>Incrémentation (Le pas) :</strong> Elle remonte à la signature de la boucle et exécute <code>i++</code>. La variable <code>i</code> passe à 2.</li>
+                    <li>Le cycle (Évaluation -> Exécution -> Incrémentation) se répète jusqu'à ce que <code>i</code> devienne 6.</li>
+                    <li>Quand <code>i = 6</code>, la condition <code>6 &lt;= 5</code> est fausse (<em>false</em>). La boucle s'arrête instantanément sans exécuter le code intérieur.</li>
+                </ol>
+                <p><strong>Avantage majeur :</strong> La gestion du compteur est 100% automatique. On utilise cette boucle lorsqu'on doit répéter une action un nombre de fois <strong>prédéfini et connu à l'avance</strong>.</p>
+            </div>
+        </section>
+
+        <section id="while">
+            <h2 class="section-title">2.2 La boucle <code>while</code> (Tant Que)</h2>
+            <p>La boucle <code>while</code> est la structure itérative la plus basique. Contrairement à la boucle <code>for</code>, elle ne gère pas de compteur intégré. Elle se contente d'évaluer une condition booléenne.</p>
+            
+            <p>La structure générale de cette boucle est extrêmement simple :</p>
+            <code>while (&lt;condition&gt;) { &lt;instructions&gt; }</code>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Exemple_Boucle_While.java</span>
+                    <span>Java</span>
+                </div>
+<pre>
+<span class="keyword">public class</span> <span class="type">ExempleWhile</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="comment">// 1. Initialisation manuelle du compteur AVANT la boucle</span>
+        <span class="type">int</span> i = <span class="number">1</span>; 
+        
+        <span class="comment">// 2. Contrôle de la condition de poursuite</span>
+        <span class="keyword">while</span> (i &lt;= <span class="number">5</span>) {
+            System.out.print(i + <span class="string">" "</span>);
+            
+            <span class="comment">// 3. Incrémentation manuelle DANS le corps de la boucle</span>
+            i++; 
+        }
+        System.out.println();
+    }
+}
+</pre>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="terminal-title">Fenêtre d'exécution : Boucle WHILE</div>
+                    <div class="terminal-controls">
+                        <button class="btn-run" onclick="runStatic('out-while', '1 2 3 4 5 ')">Exécuter la boucle</button>
+                        <button class="btn-clear" onclick="clearStatic('out-while')">Effacer</button>
+                    </div>
+                </div>
+                <div class="terminal-body" id="out-while">
+                    <div class="terminal-line"><span class="terminal-prompt">Compilateur></span> Prêt pour l'exécution. En attente de l'ordre...</div>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Explication détaillée et Pièges à éviter :</h4>
+                <p><strong>Différence fondamentale avec le FOR :</strong><br>
+                Bien que le résultat affiché ("1 2 3 4 5 ") soit strictement identique à l'exemple précédent, l'architecture du code est très différente. La boucle <code>while</code> nécessite une discipline stricte de la part du développeur.</p>
+                <p>N'oubliez jamais lorsqu'une boucle <code>while</code> fonctionne avec un compteur, il faut respecter ces trois règles d'or de l'algorithmique :</p>
+                <ul>
+                    <li><strong>Règle 1 :</strong> Il faut obligatoirement initialiser le compteur (ici <code>int i = 1;</code>) <em>avant</em> d'entrer dans la boucle.</li>
+                    <li><strong>Règle 2 :</strong> Il faut contrôler correctement la valeur du compteur dans la condition de boucle (ici <code>i &lt;= 5</code>).</li>
+                    <li><strong>Règle 3 (CRITIQUE) :</strong> Il faut absolument <strong>incrémenter le compteur</strong> à la fin du corps de la boucle (le <code>i++;</code>). Si vous oubliez cette ligne, <code>i</code> vaudra toujours 1. La condition <code>1 &lt;= 5</code> sera toujours vraie à l'infini. C'est ce qu'on appelle une <strong>Boucle Infinie</strong>, qui fait planter ou geler le programme (dépassement de capacité mémoire / CPU).</li>
+                </ul>
+                <p><em>Note syntaxique de Java :</em> Notez bien qu'il n'y a pas de point-virgule (<code>;</code>) après la parenthèse fermante du <code>while(...)</code>.</p>
+            </div>
+        </section>
+
+        <section id="dowhile">
+            <h2 class="section-title">2.3 La boucle <code>do...while</code> (Répéter... Jusqu'à)</h2>
+            <p>La boucle <code>do...while</code> est une variante très spécifique de la boucle <code>while</code>. Elle inverse le processus de vérification.</p>
+            
+            <p>La structure de la boucle <code>do...while</code> est :</p>
+            <code>do { &lt;instructions&gt; } while(&lt;condition&gt;);</code>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Exemple_Boucle_Do_While.java</span>
+                    <span>Java</span>
+                </div>
+<pre>
+<span class="keyword">public class</span> <span class="type">ExempleDoWhile</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="type">int</span> i = <span class="number">1</span>;
+        
+        <span class="keyword">do</span> {
+            <span class="comment">// L'incrémentation se fait AVANT l'affichage dans cet exemple précis</span>
+            i++; 
+            System.out.print(i + <span class="string">" "</span>);
+            
+        <span class="comment">// La condition est évaluée à la FIN, notez la présence du point-virgule obligatoire ici</span>
+        } <span class="keyword">while</span> (i &lt;= <span class="number">5</span>); 
+        
+        System.out.println();
+    }
+}
+</pre>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="terminal-title">Fenêtre d'exécution : Boucle DO...WHILE</div>
+                    <div class="terminal-controls">
+                        <button class="btn-run" onclick="runStatic('out-dowhile', '2 3 4 5 6 ')">Exécuter la boucle</button>
+                        <button class="btn-clear" onclick="clearStatic('out-dowhile')">Effacer</button>
+                    </div>
+                </div>
+                <div class="terminal-body" id="out-dowhile">
+                    <div class="terminal-line"><span class="terminal-prompt">Compilateur></span> Prêt pour l'exécution. En attente de l'ordre...</div>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Analyse d'exécution et Logique Inverse :</h4>
+                <p><strong>Pourquoi affiche-t-il "2 3 4 5 6 " et non pas "1 2 3 4 5" ?</strong></p>
+                <p>C'est ici qu'il faut être très attentif à l'ordre des instructions dans le code écrit dans l'énoncé du TP :</p>
+                <ul>
+                    <li>La variable <code>i</code> est initialisée à 1.</li>
+                    <li>La machine entre dans le bloc <code>do</code>. Elle lit l'instruction <code>i++</code>. Donc <code>i</code> devient 2.</li>
+                    <li>Ensuite, elle exécute <code>System.out.print(i)</code>. Le premier chiffre affiché est donc bien <strong>2</strong>.</li>
+                    <li>La boucle continue. Lorsque <code>i</code> vaut 5, on affiche 5. Ensuite, l'évaluation <code>while (5 &lt;= 5)</code> est vraie. La boucle recommence donc une dernière fois !</li>
+                    <li>Le <code>i</code> passe à 6 grâce au <code>i++</code>, la machine affiche <strong>6</strong>, et enfin l'évaluation <code>while (6 &lt;= 5)</code> devient fausse. La boucle s'arrête.</li>
+                </ul>
+                <p><strong>La règle d'or du Do...While :</strong><br>
+                La condition est évaluée après chaque passage dans la boucle. La conséquence directe et fondamentale en programmation est que <strong>l'on exécute toujours au moins une fois</strong> les instructions contenues dans une boucle <code>do...while</code> (Répéter... jusqu'à), même si la condition de fin est fausse dès le départ.</p>
+            </div>
+        </section>
+
+        <section id="exo">
+            <h2 class="section-title" id="exo-enonce">3. Exercice : Conception d'un Système d'Authentification</h2>
+            
+            <p><strong>L'Énoncé détaillé :</strong></p>
+            <div class="info-box" style="margin-top: 0;">
+                Écrire un programme complet en langage JAVA qui permet de vérifier le mot de passe saisi au clavier par un utilisateur. La politique de sécurité est la suivante :
+                <ul>
+                    <li>L'utilisateur a droit à un maximum de <strong>3 chances</strong>. S'il réussit, la machine lui affiche le succès de l'authentification.</li>
+                    <li>Si les 3 chances sont épuisées, un message strict de "Compte bloqué" sera affiché à l'écran.</li>
+                    <li><strong>Mécanisme de récupération :</strong> Dans le cas où l'utilisateur a bloqué son compte, le système lui propose une ultime chance de retenter l'accès sous forme de "question secrète" à laquelle il devra répondre (O/N pour accepter, puis saisie de la réponse).</li>
+                    <li>Si la réponse à la question secrète est incorrecte, l'accès lui est définitivement refusé, le programme s'arrête.</li>
+                </ul>
+                <p><em>Remarque technique :</em> Le mot de passe correct attendu dans la base de données est <strong>'AIIMI'</strong> et la réponse correcte à la question secrète est <strong>'Auto'</strong>.</p>
+            </div>
+
+            <h3 class="subsection-title" id="exo-code">Code Source Java (Implémentation de l'algorithme)</h3>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>AuthentificationSysteme.java</span>
+                    <span>Java</span>
+                </div>
+<pre>
+<span class="keyword">import</span> java.util.Scanner; <span class="comment">// Nécessaire pour capturer les frappes clavier</span>
+
+<span class="keyword">public class</span> <span class="type">AuthentificationSysteme</span> {
+    
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        
+        <span class="comment">// 1. Initialisation du flux de lecture</span>
+        <span class="type">Scanner</span> clavier = <span class="keyword">new</span> <span class="type">Scanner</span>(System.in);
+        
+        <span class="comment">// 2. Définition des données de sécurité "en dur" (depuis l'énoncé)</span>
+        <span class="keyword">final</span> <span class="type">String</span> MOT_DE_PASSE_VALIDE = <span class="string">"AIIMI"</span>;
+        <span class="keyword">final</span> <span class="type">String</span> REPONSE_SECRETE_VALIDE = <span class="string">"Auto"</span>;
+        
+        <span class="comment">// 3. Variables d'état (La machine à états)</span>
+        <span class="type">int</span> compteurErreurs = <span class="number">0</span>;
+        <span class="type">boolean</span> isAuthentifie = <span class="keyword">false</span>;
+        <span class="type">String</span> saisie = <span class="string">""</span>;
+        
+        <span class="comment">/* =========================================================
+           PHASE 1 : La Boucle de saisie du mot de passe
+           On boucle TANT QUE les erreurs sont < 3 ET que l'utilisateur 
+           n'est pas encore authentifié.
+           ========================================================= */</span>
+        <span class="keyword">while</span> (compteurErreurs &lt; <span class="number">3</span> &amp;&amp; !isAuthentifie) {
+            
+            System.out.print(<span class="string">"Veuillez saisir le mot de passe : "</span>);
+            saisie = clavier.nextLine();
+            
+            <span class="comment">// Comparaison Orientée Objet : On utilise la méthode equals()</span>
+            <span class="keyword">if</span> (saisie.equals(MOT_DE_PASSE_VALIDE)) {
+                
+                <span class="comment">// Le booléen passe à true, ce qui va FORCER la sortie du while</span>
+                isAuthentifie = <span class="keyword">true</span>; 
+                
+            } <span class="keyword">else</span> {
+                
+                compteurErreurs++; <span class="comment">// On incrémente le nombre d'échecs</span>
+                
+                <span class="comment">// On n'affiche le message d'erreur que s'il reste des tentatives</span>
+                <span class="keyword">if</span> (compteurErreurs &lt; <span class="number">3</span>) {
+                    <span class="type">int</span> chancesRestantes = <span class="number">3</span> - compteurErreurs;
+                    System.out.println(<span class="string">"Mot de passe incorrect. Il vous reste "</span> 
+                                       + chancesRestantes + <span class="string">" chance(s)."</span>);
+                }
+            }
+        }
+        
+        <span class="comment">/* =========================================================
+           PHASE 2 : Analyse Post-Boucle (Que s'est-il passé ?)
+           On sort de la boucle soit par succès, soit par blocage.
+           ========================================================= */</span>
+        <span class="keyword">if</span> (isAuthentifie) {
+            
+            <span class="comment">// L'utilisateur a réussi (du 1er, 2e ou 3e coup)</span>
+            System.out.println(<span class="string">"\n[+] Succès de l'authentification. Accès Autorisé."</span>);
+            
+        } <span class="keyword">else</span> {
+            
+            <span class="comment">// La boucle a cassé car compteurErreurs == 3</span>
+            System.out.println(<span class="string">"\n[!] COMPTE BLOQUÉ. Nombre de tentatives maximum atteint."</span>);
+            
+            <span class="comment">/* =====================================================
+               PHASE 3 : Procédure de récupération (Question secrète)
+               ===================================================== */</span>
+            System.out.print(<span class="string">"Voulez-vous utiliser la question secrète pour débloquer ? (O/N) : "</span>);
+            <span class="type">String</span> choixRecuperation = clavier.nextLine();
+            
+            <span class="comment">// equalsIgnoreCase() permet d'accepter 'o' ou 'O' indifféremment</span>
+            <span class="keyword">if</span> (choixRecuperation.equalsIgnoreCase(<span class="string">"O"</span>)) {
+                
+                System.out.print(<span class="string">"Question Secrète : Quelle est la spécialité étudiée ? "</span>);
+                <span class="type">String</span> reponseFournie = clavier.nextLine();
+                
+                <span class="keyword">if</span> (reponseFournie.equals(REPONSE_SECRETE_VALIDE)) {
+                    System.out.println(<span class="string">"[+] Succès ! Compte débloqué via la question secrète."</span>);
+                } <span class="keyword">else</span> {
+                    System.out.println(<span class="string">"[-] Réponse incorrecte. Accès définitivement refusé."</span>);
+                }
+                
+            } <span class="keyword">else</span> {
+                <span class="comment">// Si l'utilisateur tape 'N' ou n'importe quelle autre touche</span>
+                System.out.println(<span class="string">"[-] Procédure de secours annulée. Accès définitivement refusé."</span>);
+            }
+        }
+        
+        <span class="comment">// Fermeture du flux pour éviter les fuites de mémoire (Memory Leaks)</span>
+        clavier.close();
+    }
+}
+</pre>
+            </div>
+
+            <h3 class="subsection-title" id="exo-terminal">Test en Temps Réel de l'Algorithme</h3>
+            <p>Ce terminal exécute exactement la logique du code Java ci-dessus via une machine à états JavaScript. Essayez de bloquer le compte (3 fausses saisies) puis répondez par <strong>Auto</strong> à la question secrète. Le mot de passe direct est <strong>AIIMI</strong>.</p>
+            
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="terminal-title">Console Application — AuthentificationSysteme.exe</div>
+                    <div class="terminal-controls">
+                        <button class="btn-clear" onclick="rebootInteractiveTerminal()">Relancer le Programme</button>
+                    </div>
+                </div>
+                
+                <div class="terminal-body" id="term-interactive-body">
+                    <div class="terminal-line"><span class="terminal-system">[System Log] Initialisation des protocoles de sécurité... Terminé.</span></div>
+                    
+                    <div id="interactive-input-container" class="terminal-input-wrapper">
+                        <span id="interactive-prompt">Veuillez saisir le mot de passe :</span>
+                        <input type="text" id="interactive-input" class="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+                        <button class="btn-run" onclick="processInteractiveInput()">Entrée</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation-box" id="exo-explication">
+                <h4>Explication approfondie des choix architecturaux :</h4>
+                <p>Pourquoi ce code est-il optimisé et professionnel ? Décortiquons la logique :</p>
+                
+                <p><strong>1. La condition combinée du <code>while</code> :</strong><br>
+                La ligne magique de cet algorithme est <code>while (compteurErreurs &lt; 3 && !isAuthentifie)</code>. L'opérateur logique <code>&&</code> (ET) agit comme un filtre puissant. 
+                Si l'utilisateur tape le bon mot de passe ("AIIMI") au premier essai, le booléen <code>isAuthentifie</code> passe à <code>true</code>. De ce fait, l'expression <code>!isAuthentifie</code> (NON authentifié) devient <code>false</code>. La boucle est immédiatement brisée, évitant de demander inutilement un mot de passe déjà validé. C'est l'essence même de l'optimisation algorithmique.</p>
+                
+                <p><strong>2. La Comparaison des Objets String en POO :</strong><br>
+                C'est une erreur classique des débutants en Java de vouloir utiliser l'opérateur d'égalité <code>==</code> pour comparer du texte (ex: <code>saisie == "AIIMI"</code>). En Orienté Objet, la variable <code>saisie</code> est une référence vers un espace mémoire. L'opérateur <code>==</code> comparerait donc les adresses mémoires (qui sont différentes), et non pas les lettres tapées ! C'est pourquoi nous sommes obligés d'appeler la méthode <code>.equals()</code> de la classe <code>String</code>, qui va parcourir le texte caractère par caractère pour assurer la correspondance.</p>
+
+                <p><strong>3. Robustesse avec <code>equalsIgnoreCase()</code> :</strong><br>
+                Dans la phase de récupération, l'utilisateur doit répondre (O/N). Il pourrait taper un 'o' minuscule. Au lieu d'écrire une condition lourde comme <code>if (choix.equals("O") || choix.equals("o"))</code>, l'API Java nous offre <code>equalsIgnoreCase()</code>. Cette méthode ignore la casse (majuscule/minuscule), rendant notre programme beaucoup plus robuste face aux erreurs de frappe de l'utilisateur final.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        &copy; Created by <span class="name">DAHANE AHMED LAMINE</span>
+    </footer>
+
+    <script>
+        /* ==========================================================================
+           1. LOGIQUE DES TERMINAUX STATIQUES (FOR, WHILE, DO...WHILE)
+           Ces fonctions injectent simplement du texte prédéfini pour simuler
+           une exécution instantanée des exemples du cours.
+           ========================================================================== */
+        
+        /**
+         * Fonction pour simuler l'exécution d'un code et afficher un résultat statique.
+         * @param {string} containerId - L'ID de la balise <div> servant d'écran.
+         * @param {string} outputText - Le texte à afficher (ex: "1 2 3 4 5 ").
+         */
+        function runStatic(containerId, outputText) {
+            const container = document.getElementById(containerId);
+            
+            // Création de l'affichage de sortie avec formatage terminal
+            const outputHTML = `
+                <div class="terminal-line" style="animation: fadeIn 0.5s;">
+                    <span class="terminal-system">> Compilation du code Java... OK.</span><br>
+                    <span class="terminal-system">> Lancement de l'exécution...</span><br>
+                    <span style="color: #ffffff; font-weight: bold;">${outputText}</span><br>
+                    <span class="terminal-prompt">Compilateur></span> Exécution terminée avec le code de sortie 0.
+                </div>
+            `;
+            
+            container.innerHTML += outputHTML;
+            // Force le scroll tout en bas pour voir la nouvelle ligne
+            container.scrollTop = container.scrollHeight;
+        }
+
+        /**
+         * Fonction pour effacer le contenu d'un terminal statique.
+         * @param {string} containerId - L'ID du terminal à nettoyer.
+         */
+        function clearStatic(containerId) {
+            document.getElementById(containerId).innerHTML = `
+                <div class="terminal-line"><span class="terminal-prompt">Compilateur></span> Écran nettoyé. En attente.</div>
+            `;
+        }
+
+
+        /* ==========================================================================
+           2. LOGIQUE DU TERMINAL INTERACTIF (EXERCICE 4 - MACHINE A ETATS)
+           Ici, nous reproduisons fidèlement la logique algorithmique du Java
+           directement en JavaScript pour le navigateur Web.
+           ========================================================================== */
+
+        // Objet représentant l'état (State) de notre application console
+        let appState = {
+            currentStep: 'PASSWORD_REQUEST', // Les étapes: PASSWORD_REQUEST, RECOVERY_ASK, RECOVERY_ANSWER, TERMINATED
+            failedAttempts: 0,
+            maxAllowedAttempts: 3,
+            secretPassword: 'AIIMI',         // Sensible à la casse
+            secretRecoveryWord: 'Auto'       // Sensible à la casse
+        };
+
+        // Références vers les éléments du DOM
+        const interactiveBody = document.getElementById('term-interactive-body');
+        const interactiveInputContainer = document.getElementById('interactive-input-container');
+        const interactiveInput = document.getElementById('interactive-input');
+        const interactivePrompt = document.getElementById('interactive-prompt');
+
+        /**
+         * Fonction utilitaire pour écrire une ligne dans le terminal interactif.
+         * @param {string} message - Le message (HTML accepté) à afficher.
+         * @param {string} cssClass - (Optionnel) Une classe CSS spécifique pour la couleur (ex: terminal-error).
+         */
+        function writeInteractiveLine(message, cssClass = '') {
+            const newLineElement = document.createElement('div');
+            newLineElement.className = 'terminal-line ' + cssClass;
+            newLineElement.innerHTML = message;
+            
+            // Insérer la nouvelle ligne juste avant le champ de saisie
+            interactiveBody.insertBefore(newLineElement, interactiveInputContainer);
+            
+            // Auto-scroll pour toujours voir la dernière ligne tapée
+            interactiveBody.scrollTop = interactiveBody.scrollHeight;
+        }
+
+        /**
+         * Réinitialise totalement la machine à états et nettoie l'écran du terminal.
+         */
+        function rebootInteractiveTerminal() {
+            // Remise à zéro des variables d'état
+            appState.currentStep = 'PASSWORD_REQUEST';
+            appState.failedAttempts = 0;
+            
+            // Nettoyage visuel de l'écran (on garde le log de démarrage)
+            interactiveBody.innerHTML = `
+                <div class="terminal-line">
+                    <span class="terminal-system">[System Log] Redémarrage matériel forcé...</span><br>
+                    <span class="terminal-system">[System Log] Nouveau cycle d'authentification initié.</span>
+                </div>
+            `;
+            // On remet la zone d'input à la fin
+            interactiveBody.appendChild(interactiveInputContainer);
+            
+            // Restauration de l'UI initiale
+            interactivePrompt.innerText = "Veuillez saisir le mot de passe :";
+            interactiveInput.value = '';
+            interactiveInputContainer.style.display = 'flex'; // Rendre visible
+            interactiveInput.focus();
+        }
+
+        /**
+         * Fonction centrale exécutée à chaque fois que l'utilisateur valide (Bouton ou touche Entrée).
+         * Elle implémente la logique des blocs if/else du code Java.
+         */
+        function processInteractiveInput() {
+            // Si l'application est dans un état terminé, on bloque la saisie
+            if(appState.currentStep === 'TERMINATED') return;
+
+            // Récupérer et nettoyer la saisie (retirer les espaces avant/après)
+            const userInput = interactiveInput.value.trim();
+            
+            // Faire un écho de ce que l'utilisateur vient de taper
+            writeInteractiveLine(`<span class="terminal-user-input">> ${userInput}</span>`);
+            interactiveInput.value = ''; // Vider le champ pour la prochaine frappe
+
+            // --- SWITCH (Aiguillage selon l'état actuel de l'app) ---
+            switch(appState.currentStep) {
+                
+                /* ETAPE 1 : L'utilisateur doit taper le mot de passe principal */
+                case 'PASSWORD_REQUEST':
+                    if (userInput === appState.secretPassword) {
+                        // SUCCÈS DIRECT
+                        writeInteractiveLine("[+] Succès de l'authentification. Accès Autorisé.", "terminal-text");
+                        killApplication(); // Fin du programme
+                    } else {
+                        // ÉCHEC
+                        appState.failedAttempts++;
+                        
+                        if (appState.failedAttempts < appState.maxAllowedAttempts) {
+                            // Il reste des chances
+                            let chancesLeft = appState.maxAllowedAttempts - appState.failedAttempts;
+                            writeInteractiveLine(`[-] Mot de passe incorrect. Il vous reste ${chancesLeft} chance(s).`, "terminal-warning");
+                        } else {
+                            // C'est le 3ème échec -> BLOCAGE
+                            writeInteractiveLine("[!] COMPTE BLOQUÉ. Nombre de tentatives maximum atteint.", "terminal-error");
+                            // On passe immédiatement à la proposition de secours
+                            writeInteractiveLine("Voulez-vous utiliser la question secrète pour débloquer ? (O/N) :");
+                            interactivePrompt.innerText = "(O/N) :";
+                            appState.currentStep = 'RECOVERY_ASK'; // Changement d'état
+                        }
+                    }
+                    break;
+
+                /* ETAPE 2 : On attend un 'O' ou un 'N' pour la question secrète */
+                case 'RECOVERY_ASK':
+                    // Conversion en majuscule pour simuler ignoreCase()
+                    if (userInput.toUpperCase() === 'O') {
+                        // L'utilisateur veut tenter sa chance
+                        interactivePrompt.innerText = "Question Secrète : Quelle est la spécialité étudiée ? ";
+                        appState.currentStep = 'RECOVERY_ANSWER'; // Changement d'état
+                    } else {
+                        // L'utilisateur a tapé N, ou n'importe quelle autre bêtise
+                        writeInteractiveLine("[-] Procédure de secours annulée. Accès définitivement refusé.", "terminal-error");
+                        killApplication(); // Fin du programme
+                    }
+                    break;
+
+                /* ETAPE 3 : On vérifie la réponse à la question secrète ("Auto") */
+                case 'RECOVERY_ANSWER':
+                    if (userInput === appState.secretRecoveryWord) {
+                        // SUCCÈS DE SECOURS
+                        writeInteractiveLine("[+] Succès ! Compte débloqué via la question secrète.", "terminal-text");
+                    } else {
+                        // ÉCHEC DÉFINITIF
+                        writeInteractiveLine("[-] Réponse incorrecte. Accès définitivement refusé.", "terminal-error");
+                    }
+                    killApplication(); // Fin du programme dans tous les cas
+                    break;
+            }
+            
+            // Si le programme n'est pas terminé, on remet le focus pour taper vite
+            if(appState.currentStep !== 'TERMINATED') {
+                interactiveInput.focus();
+            }
+        }
+
+        /**
+         * Fonction qui clôture virtuellement le programme (masque la saisie).
+         */
+        function killApplication() {
+            appState.currentStep = 'TERMINATED';
+            interactiveInputContainer.style.display = 'none'; // Cacher l'input
+            writeInteractiveLine("<br><span class='comment'>-- Processus terminé (Code 0). Cliquez sur 'Relancer le Programme' en haut à droite. --</span>");
+        }
+
+        // --- ECOUTEUR D'EVENEMENTS ---
+        // Permet d'appuyer sur la touche "Entrée" (Enter) du clavier pour valider,
+        // ce qui est beaucoup plus naturel dans un terminal.
+        interactiveInput.addEventListener('keypress', function(e) { 
+            if(e.key === 'Enter') {
+                processInteractiveInput(); 
+            }
+        });
+
+    </script>
+</body>
+</html>
